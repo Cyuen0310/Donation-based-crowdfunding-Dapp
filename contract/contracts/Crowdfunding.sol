@@ -35,7 +35,7 @@ contract CrowdFunding is AutomationCompatibleInterface {
         require (_duration > 0,"Campaign duration must at least be 1 day");
         uint256 campaignId = TotalCampaigns;
         Campaign storage campaign = campaigns[campaignId];
-        
+
         campaign.owner = payable(msg.sender);
         campaign.title = _title;
         campaign.description = _description;
@@ -66,48 +66,66 @@ contract CrowdFunding is AutomationCompatibleInterface {
         backedCampaigns[msg.sender].push(_id);
 
         emit backedcampaign(_id, msg.sender, fundingValue);
-        
-
     }
 
-    function checkUpkeep (bytes calldata) external view override returns(bool upkeepNeeded, bytes memory){
+    function checkUpkeep (bytes calldata) external view override returns(bool upkeepNeeded, bytes memory performData){
         for (uint256 i = 0; i < TotalCampaigns; i++){
             Campaign storage campaign = campaigns[i];
-            if (campaign.fundedAmount >= campaign.target || campaign.deadline < block.timestamp){
+            if (
+                campaign.isActive &&
+                !campaign.isCollected &&
+                (campaign.fundedAmount >= campaign.target || campaign.deadline < block.timestamp)
+            ) {
                 return (true, abi.encode(i));
             }
-            return (false, "");
         }
+        return (false, "");
     }
 
     function performUpkeep (bytes calldata performData)  external override{
         uint256 campaignId = abi.decode(performData, (uint256));
         Campaign storage campaign = campaigns[campaignId];
+        require(campaign.isActive, "Campaign already ended");
+        require(!campaign.isCollected, "Funds already withdrawn");
+
         uint256 amount = campaign.fundedAmount;
         (bool success,) = campaign.owner.call{value: amount}("");
         require (success, "Transfer failed");
         campaign.isCollected = true;
         campaign.isActive = false;
         emit withdrawfund(campaignId, campaign.owner, amount);
-
     }
 
     function getBackedCampaigns(address _backer) public view returns(uint256[] memory){
         return backedCampaigns[_backer];
     }
 
+    function getContribution(uint256 _id, address _user) public view returns (uint256) {
+        return campaigns[_id].backers[_user];
+    }
 
-
-
-
-
-
-
-
-
-    
-
-
-
-
+    function getCampaign(uint256 _id) public view returns (
+            address owner,
+            string memory title,
+            string memory description,
+            uint256 target,
+            uint256 deadline,
+            uint256 fundedAmount,
+            uint256 numberOfBackers,
+            bool isActive,
+            bool isCollected
+        ){
+        Campaign storage campaign = campaigns[_id];
+        return (
+            campaign.owner,
+            campaign.title,
+            campaign.description,
+            campaign.target,
+            campaign.deadline,
+            campaign.fundedAmount,
+            campaign.numberOfBackers,
+            campaign.isActive,
+            campaign.isCollected
+        );
+    }
 }
