@@ -2,7 +2,7 @@ import { useActiveAccount, useSendTransaction } from "thirdweb/react";
 import { defineChain, getContract, prepareContractCall } from "thirdweb";
 import { client } from "./client";
 import { useState } from "react";
-import { parseEther } from "ethers"; // Use this to convert ETH → wei
+import { parseEther } from "ethers";
 
 export function CreateCampaign() {
   const account = useActiveAccount();
@@ -16,8 +16,8 @@ export function CreateCampaign() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [target, setTarget] = useState(""); // in ETH
-  const [duration, setDuration] = useState(""); // in days
+  const [target, setTarget] = useState(""); 
+  const [duration, setDuration] = useState("");
 
   const handleCreateCampaign = async () => {
     if (!account) {
@@ -33,7 +33,7 @@ export function CreateCampaign() {
         params: [
           title,
           description,
-          parseEther(target), // ETH to wei
+          parseEther(target), 
           BigInt(duration),
         ],
       });
@@ -42,6 +42,10 @@ export function CreateCampaign() {
         onSuccess: (txResult) => {
           console.log("Transaction sent:", txResult);
           alert("Campaign created successfully!");
+          setTitle("");
+          setDescription("");
+          setTarget("");
+          setDuration("");
         },
         onError: (err) => {
           console.error("Transaction failed:", err);
@@ -54,81 +58,110 @@ export function CreateCampaign() {
   };
 
   return (
-    <div className="p-6 max-w-xl mx-auto bg-white shadow rounded mt-10">
-      <h2 className="text-2xl font-bold mb-4 text-gray-900">Create Campaign</h2>
-      <div className="space-y-4">
-        <div>
-          <label
-            htmlFor="title"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Campaign Title
-          </label>
-          <input
-            id="title"
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter campaign title"
-            className="w-full p-2 border rounded"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Description
-          </label>
-          <input
-            id="description"
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter campaign description"
-            className="w-full p-2 border rounded"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="target"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Target Amount (ETH)
-          </label>
-          <input
-            id="target"
-            type="number"
-            value={target}
-            onChange={(e) => setTarget(e.target.value)}
-            placeholder="Enter target amount in ETH"
-            className="w-full p-2 border rounded"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="duration"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Duration (days)
-          </label>
-          <input
-            id="duration"
-            type="number"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            placeholder="Enter campaign duration in days"
-            className="w-full p-2 border rounded"
-          />
-        </div>
+    <div className="p-6 max-w-4xl mx-auto">
+      <h1 className="text-3xl font-bold mb-8 text-center text-gray-600">Create New Campaign</h1>
+      
+      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+        <div className="p-6">
+          <div className="space-y-6">
+            <div>
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Campaign Title
+              </label>
+              <input
+                id="title"
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Enter campaign title"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+              />
+            </div>
 
-        <button
-          onClick={handleCreateCampaign}
-          disabled={isPending}
-          className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:opacity-60"
-        >
-          {isPending ? "Creating..." : "Create Campaign"}
-        </button>
+            <div>
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
+                Description
+              </label>
+              <textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter campaign description"
+                rows={4}
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label
+                  htmlFor="target"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Target Amount (ETH)
+                </label>
+                <input
+                  id="target"
+                  type="number"
+                  value={target}
+                  onChange={(e) => setTarget(e.target.value)}
+                  placeholder="0.1"
+                  min="0"
+                  step="0.01"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="duration"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  Duration (days)
+                </label>
+                <input
+                  id="duration"
+                  type="number"
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                  placeholder="30"
+                  min="1"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                />
+              </div>
+            </div>
+
+            <div className="pt-4">
+              <button
+                onClick={handleCreateCampaign}
+                disabled={isPending || !title || !description || !target || !duration}
+                className={`w-full px-6 py-3 rounded-lg font-medium text-white transition-colors ${
+                  isPending || !title || !description || !target || !duration
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                {isPending ? (
+                  <span className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Creating Campaign...
+                  </span>
+                ) : (
+                  "Create Campaign"
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
