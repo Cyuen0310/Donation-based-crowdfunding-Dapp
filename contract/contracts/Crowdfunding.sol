@@ -2,6 +2,17 @@
 pragma solidity ^0.8.9;
 import {AutomationCompatibleInterface} from "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
 
+// Function:
+// 1. createCampaign ok
+// 2. backCampaign ok 
+// 3. getAllCampaigns ok ( using TotalCampaigns + getCampaign(id) )
+// 4. showCampaignDetails by id  ok
+// 5. getAllUserCreatedCampaigns
+// 6. getAllUserBackedCampaigns ok
+// 7. getUserBackedAmount for a campaign
+// 8. automatically withdraw funds ok
+
+
 contract CrowdFunding is AutomationCompatibleInterface {
     struct Campaign{
         address payable owner;
@@ -14,12 +25,14 @@ contract CrowdFunding is AutomationCompatibleInterface {
         uint256 numberOfBackers;
         bool isActive;
         bool isCollected;
-        mapping(address => uint256) backers; // backers[address] = amount
+        mapping(address => uint256) backers; // backers[address] = amount  show all backers and their contributions of a campaign
     }
-
-    mapping(uint256 => Campaign) public campaigns; // campaigns[id] = campaign
-    mapping (address => uint256[] ) public backedCampaigns; // backedCampaigns[address] = [id, id]
     uint256 public TotalCampaigns = 0;
+    mapping(uint256 => Campaign) public campaigns; // campaigns[id] = campaign show campaign details by id
+    mapping (address => uint256[] ) public backedCampaigns; // backedCampaigns[address] = [id, id, ....] show all campaigns backed by an user
+    mapping (address => uint256[] ) public createdCampaigns; // createdCampaigns[address] = [id, id, ....] show all campaigns created by an user
+
+    
 
     event backedcampaign(uint256 indexed id, address indexed backer, uint256 amount);
     event createdcampaign (uint256 indexed id, address indexed owner, string title, string description, uint256 target, uint256 duration);
@@ -47,6 +60,7 @@ contract CrowdFunding is AutomationCompatibleInterface {
         campaign.isActive = true;
         campaign.isCollected = false;
         TotalCampaigns++;
+        createdCampaigns[msg.sender].push(campaignId);
         emit createdcampaign(campaignId, msg.sender, _title, _description, _target, _duration);
         return campaignId;
     }
@@ -98,6 +112,10 @@ contract CrowdFunding is AutomationCompatibleInterface {
 
     function getBackedCampaigns(address _backer) public view returns(uint256[] memory){
         return backedCampaigns[_backer];
+    }
+
+    function getCreatedCampaigns(address _owner) public view returns(uint256[] memory){
+        return createdCampaigns[_owner];
     }
 
     function getContribution(uint256 _id, address _user) public view returns (uint256) {

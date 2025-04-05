@@ -1,30 +1,61 @@
 import { useActiveAccount, useSendTransaction } from "thirdweb/react";
-import { sepolia } from "thirdweb/chains";
-import {
-  defineChain,
-  getContract,
-  prepareContractCall,
-  sendTransaction,
-} from "thirdweb";
+import { defineChain, getContract, prepareContractCall } from "thirdweb";
 import { client } from "./client";
 import { useState } from "react";
+import { parseEther } from "ethers"; // Use this to convert ETH → wei
 
 export function CreateCampaign() {
+  const account = useActiveAccount();
+  const { mutate: sendTransaction, isPending } = useSendTransaction();
+
   const contract = getContract({
     client,
-    chain: defineChain(11155111),
+    chain: defineChain(11155111), // Sepolia
     address: "0x6E2d1aC814648897cbd44131aDCA821986438aF1",
   });
-  const account = useActiveAccount();
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [target, setTarget] = useState("");
-  const [duration, setDuration] = useState("");
-  const { mutate: sendTransaction } = useSendTransaction();
+  const [target, setTarget] = useState(""); // in ETH
+  const [duration, setDuration] = useState(""); // in days
+
+  const handleCreateCampaign = async () => {
+    if (!account) {
+      alert("Please connect your wallet first.");
+      return;
+    }
+
+    try {
+      const transaction = prepareContractCall({
+        contract,
+        method:
+          "function createCampaign(string _title, string _description, uint256 _target, uint256 _duration) returns (uint256)",
+        params: [
+          title,
+          description,
+          parseEther(target), // ETH to wei
+          BigInt(duration),
+        ],
+      });
+
+      sendTransaction(transaction, {
+        onSuccess: (txResult) => {
+          console.log("Transaction sent:", txResult);
+          alert("Campaign created successfully!");
+        },
+        onError: (err) => {
+          console.error("Transaction failed:", err);
+          alert("Transaction failed!");
+        },
+      });
+    } catch (error) {
+      console.error("Error preparing transaction:", error);
+    }
+  };
 
   return (
-    <div className="p-6 max-w-xl mx-auto bg-white shadow rounded">
-      <h2 className="text-2xl font-bold mb-4">Create Campaign</h2>
+    <div className="p-6 max-w-xl mx-auto bg-white shadow rounded mt-10">
+      <h2 className="text-2xl font-bold mb-4 text-gray-900">Create Campaign</h2>
       <div className="space-y-4">
         <div>
           <label
@@ -92,18 +123,11 @@ export function CreateCampaign() {
         </div>
 
         <button
-          onClick={() => {
-            const transaction = prepareContractCall({
-              contract,
-              method:
-                "function createCampaign(string _title, string _description, uint256 _target, uint256 _duration) returns (uint256)",
-              params: [title, description, BigInt(target), BigInt(duration)],
-            });
-            sendTransaction(transaction);
-          }}
-          className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          onClick={handleCreateCampaign}
+          disabled={isPending}
+          className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition disabled:opacity-60"
         >
-          Create
+          {isPending ? "Creating..." : "Create Campaign"}
         </button>
       </div>
     </div>
