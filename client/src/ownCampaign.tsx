@@ -22,7 +22,7 @@ export default function OwnCampaign() {
   // Helper function to fetch campaign details by ID
   const CampaignDetails = ({ campaignId }: { campaignId: bigint }) => {
     const { data, isLoading, error } = useReadContract({
-      contract: contractConfig,  // Nest contractConfig inside contract property
+      contract: contractConfig, // Nest contractConfig inside contract property
       method:
         "function getCampaign(uint256 _id) view returns (address owner, string title, string description, uint256 target, uint256 deadline, uint256 fundedAmount, uint256 numberOfBackers, bool isActive, bool isCollected)",
       params: [campaignId],
@@ -49,7 +49,19 @@ export default function OwnCampaign() {
     // Convert BigInt values to numbers for progress calculation
     const targetEther = target ? Number(formatEther(target.toString())) : 0;
     const fundedAmountEther = fundedAmount ? Number(formatEther(fundedAmount.toString())) : 0;
-    const progress = targetEther > 0 ? Math.min(100, (fundedAmountEther / targetEther) * 100) : 0;
+
+    // Calculate percentage, handling cases where target is zero
+    let progress: number;
+    if (targetEther > 0) {
+      progress = (fundedAmountEther / targetEther) * 100; // Remove Math.min(100, ...)
+    } else if (fundedAmountEther > 0) {
+      // If target is zero but fund is raised, consider it infinite percent
+      progress = Infinity;
+    } else {
+      progress = 0; // If both are zero
+    }
+
+    let displayProgress = isFinite(progress) ? progress.toFixed(2) : "∞";
 
     return (
       <div className="bg-white rounded-xl shadow-md overflow-hidden mb-4">
@@ -73,7 +85,10 @@ export default function OwnCampaign() {
               <span>Target: {target ? formatEther(target.toString()) : "0"} ETH</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${progress}%` }} />
+              <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${Math.min(progress, 100)}%` }} />
+            </div>
+            <div className="text-sm mt-1 text-gray-500">
+              {displayProgress}% Funded
             </div>
           </div>
 
