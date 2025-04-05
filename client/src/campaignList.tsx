@@ -134,7 +134,7 @@ export default function CampaignL() {
   if (isLoading) {
     return (
       <div className="p-6 max-w-4xl mx-auto text-center">
-        <h1 className="text-3xl font-bold mb-8">Loading your donations...</h1>
+        <h1 className="text-3xl font-bold mb-8 text-gray-400">Loading your donations...</h1>
       </div>
     );
   }
@@ -159,7 +159,7 @@ export default function CampaignL() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8 text-center">Your Donation Records</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center text-gray-600">Your Donation Records</h1>
       
       <div className="space-y-6">
         {userCampaigns.map((campaign) => {
