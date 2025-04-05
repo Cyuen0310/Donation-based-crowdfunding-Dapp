@@ -7,6 +7,7 @@ import { CreateCampaign } from "./createCampaign";
 import CampaignList from "./campaignList";
 import DonateForm from "./donateForm";
 import Navbar from "./components/navBar";
+import FetchAllCampaign from "./fetchAllCampaign";
 export function App() {
   const userwallet = useActiveAccount();
   useEffect(() => {
@@ -17,6 +18,7 @@ export function App() {
     <Router>
       <main className=" p-4 pb-10 min-h-[100vh] container max-w-screen-xl mx-auto bg-white">
         <Navbar />
+        <FetchAllCampaign />
 
         <Routes>
           <Route
