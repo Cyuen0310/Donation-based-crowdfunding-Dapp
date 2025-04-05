@@ -3,10 +3,10 @@ import thirdwebIcon from "./thirdweb.svg";
 import { client } from "./client";
 import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import {CreateCampaign} from "./createCampaign";
+import { CreateCampaign } from "./createCampaign";
 import CampaignList from "./campaignList";
-import DonateForm  from "./donateForm";
-
+import DonateForm from "./donateForm";
+import Navbar from "./components/navBar";
 export function App() {
   const userwallet = useActiveAccount();
   useEffect(() => {
@@ -15,17 +15,8 @@ export function App() {
 
   return (
     <Router>
-      <main className="relative p-4 pb-10 min-h-[100vh] container max-w-screen-lg mx-auto">
-        {/* Top-right connect button (always visible) */}
-        <div className="absolute top-6 right-1">
-          <ConnectButton
-            client={client}
-            appMetadata={{
-              name: "Example app",
-              url: "https://example.com",
-            }}
-          />
-        </div>
+      <main className=" p-4 pb-10 min-h-[100vh] container max-w-screen-xl mx-auto bg-white">
+        <Navbar />
 
         <Routes>
           <Route
@@ -35,13 +26,22 @@ export function App() {
                 <div className="py-20 text-center">
                   {userwallet ? (
                     <div className="flex justify-center space-x-4">
-                      <Link to="/createCampaign" className="text-blue-500 hover:text-blue-600">
+                      <Link
+                        to="/createCampaign"
+                        className="text-blue-500 hover:text-blue-600"
+                      >
                         Create Campaign
                       </Link>
-                      <Link to="/donateCampaign" className="text-blue-500 hover:text-blue-600">
+                      <Link
+                        to="/donateCampaign"
+                        className="text-blue-500 hover:text-blue-600"
+                      >
                         Donate to Campaign
                       </Link>
-                      <Link to="/campaignList" className="text-blue-500 hover:text-blue-600">
+                      <Link
+                        to="/campaignList"
+                        className="text-blue-500 hover:text-blue-600"
+                      >
                         Campaign List
                       </Link>
                     </div>
@@ -91,7 +91,11 @@ function Header() {
   );
 }
 
-function ArticleCard(props: { title: string; href: string; description: string; }) {
+function ArticleCard(props: {
+  title: string;
+  href: string;
+  description: string;
+}) {
   return (
     <a
       href={`${props.href}?utm_source=vite-template`}
