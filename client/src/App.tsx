@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { CreateCampaign } from "./createCampaign";
 import CampaignList from "./campaignList";
 import DonateForm from "./donateForm";
+import OwnCampaignList from "./ownCampaign";
 import Navbar from "./components/navBar";
 import FetchAllCampaign from "./fetchAllCampaign";
 export function App() {
@@ -46,6 +47,12 @@ export function App() {
                       >
                         Campaign List
                       </Link>
+                      <Link
+                        to="/ownCampaign"
+                        className="text-blue-500 hover:text-blue-600"
+                      >
+                        Own Campaign List
+                      </Link>
                     </div>
                   ) : (
                     <>
@@ -62,6 +69,7 @@ export function App() {
           <Route path="/createCampaign" element={<CreateCampaign />} />
           <Route path="/donateCampaign" element={<DonateForm />} />
           <Route path="/campaignList" element={<CampaignList />} />
+          <Route path="/ownCampaign" element={<OwnCampaignList />} />
         </Routes>
       </main>
     </Router>
