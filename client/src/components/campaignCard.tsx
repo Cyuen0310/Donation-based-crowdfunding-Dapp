@@ -1,4 +1,3 @@
-// components/CampaignCard.tsx
 import React from "react";
 import { ethers } from "ethers";
 

@@ -1,7 +1,5 @@
 import { ConnectButton, useActiveAccount } from "thirdweb/react";
 import thirdwebIcon from "./thirdweb.svg";
-import { client } from "./client";
-import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { CreateCampaign } from "./createCampaign";
 import Navbar from "./components/navBar";
