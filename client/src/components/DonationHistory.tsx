@@ -1,9 +1,6 @@
 import React from "react";
 import { useReadContract } from "thirdweb/react";
 import { ethers } from "ethers";
-import { getContract } from "thirdweb";
-import { defineChain } from "thirdweb";
-import { client } from "../client";
 
 interface DonationHistoryProps {
   campaignId: number;

@@ -9,8 +9,6 @@ import DonationForm from "./components/DonationForm";
 
 export function CampaignDetails() {
   const { id } = useParams();
-  const [donationAmount, setDonationAmount] = useState("");
-  const account = useActiveAccount();
 
   const contract = getContract({
     client,
@@ -126,7 +124,6 @@ export function CampaignDetails() {
             </div>
           </div>
 
-          {/* Right Column - Donation Form */}
           <div className="md:col-span-1">
             <DonationForm
               contract={contract}
@@ -137,7 +134,6 @@ export function CampaignDetails() {
           </div>
         </div>
 
-        {/* Donation History - Below both columns */}
         <div className="mt-8">
           <DonationHistory contract={contract} campaignId={Number(id)} />
         </div>

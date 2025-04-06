@@ -72,10 +72,12 @@ export default function OwnCampaign() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8 text-center">Your Campaigns</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center text-black">
+        Your Campaigns
+      </h1>
       {account ? (
         <div>
-          <p className="text-lg text-center">
+          <p className="text-lg text-center text-black my-3">
             Your Wallet Address: {account.address}
           </p>
           {isLoadingIds ? (

@@ -81,8 +81,7 @@ export default function DonationForm({
         value: ethers.parseEther(amount),
       });
 
-      // Send the transaction
-      sendTransaction(transaction, {
+      sendTransaction(transaction as any, {
         onSuccess: () => {
           setIsSuccess(true);
           setModalTitle("Donation Successful!");

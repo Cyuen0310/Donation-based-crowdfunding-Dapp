@@ -11,9 +11,6 @@ import { CampaignDetails } from "./campaignDetails";
 
 export function App() {
   const userwallet = useActiveAccount();
-  useEffect(() => {
-    console.log(userwallet);
-  }, [userwallet]);
 
   return (
     <Router>

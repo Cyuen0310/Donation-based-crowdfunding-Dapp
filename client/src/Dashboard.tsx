@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
-import CampaignList from "./campaignList";
-import OwnCampaignList from "./ownCampaign";
+import DonatedCampaign from "./donatedCampaign";
+import CreatedCampaign from "./createdCampaign";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("created");
@@ -58,7 +58,7 @@ export default function Dashboard() {
       </div>
 
       <div className="mt-6">
-        {activeTab === "created" ? <OwnCampaignList /> : <CampaignList />}
+        {activeTab === "created" ? <CreatedCampaign /> : <DonatedCampaign />}
       </div>
     </div>
   );
