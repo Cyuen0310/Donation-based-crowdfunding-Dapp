@@ -1,4 +1,3 @@
-// OwnCampaign.tsx
 import React from "react";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { defineChain, getContract } from "thirdweb";
