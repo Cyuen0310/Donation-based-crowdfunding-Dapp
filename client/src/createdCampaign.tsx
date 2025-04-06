@@ -77,11 +77,10 @@ export default function OwnCampaign() {
       </h1>
       {account ? (
         <div>
-          <p className="text-lg text-center text-black my-3">
-            Your Wallet Address: {account.address}
-          </p>
           {isLoadingIds ? (
-            <p className="text-center">Loading campaign IDs...</p>
+            <p className="text-center text-black text-lg">
+              Loading campaign IDs...
+            </p>
           ) : errorIds ? (
             <p className="text-center text-red-500">
               Error fetching campaign IDs: {errorIds.message}

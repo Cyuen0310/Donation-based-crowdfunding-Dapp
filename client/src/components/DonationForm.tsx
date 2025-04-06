@@ -38,7 +38,6 @@ export default function DonationForm({
 
   const { mutate: sendTransaction } = useSendTransaction();
 
-  // Get campaign details to check owner
   const { data: campaign } = useReadContract({
     contract,
     method:
@@ -46,7 +45,6 @@ export default function DonationForm({
     params: [BigInt(campaignId)],
   });
 
-  // Check if current wallet is the owner
   useEffect(() => {
     if (account?.address && campaign) {
       const owner = campaign[0];
@@ -54,7 +52,6 @@ export default function DonationForm({
     }
   }, [account?.address, campaign]);
 
-  // Auto-close connect modal after wallet connection
   useEffect(() => {
     if (account?.address && showConnectModal) {
       const timer = setTimeout(() => {
@@ -64,7 +61,6 @@ export default function DonationForm({
     }
   }, [account?.address, showConnectModal]);
 
-  // Auto-close modal after 2 seconds
   useEffect(() => {
     if (showModal) {
       const timer = setTimeout(() => {
@@ -92,7 +88,6 @@ export default function DonationForm({
       setIsLoading(true);
       setError("");
 
-      // @ts-ignore - Type mismatch between thirdweb versions
       const transaction = prepareContractCall({
         contract,
         method: "function backCampaign(uint256 _id) payable",
@@ -100,7 +95,6 @@ export default function DonationForm({
         value: ethers.parseEther(amount),
       });
 
-      // Send the transaction
       sendTransaction(transaction as any, {
         onSuccess: () => {
           setIsSuccess(true);
@@ -134,14 +128,14 @@ export default function DonationForm({
   return (
     <>
       <div className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-xl font-bold mb-4">Support this Campaign</h2>
+        <h2 className="text-xl font-bold mb-4 text-black">
+          Support this Campaign
+        </h2>
 
         {!isActive ? (
           <div className="text-red-500 mb-4">This campaign has ended.</div>
-        ) : isCollected ? (
-          <div className="text-amber-500 mb-4">Funds have been collected.</div>
         ) : isOwner ? (
-          <div className="text-amber-500 mb-4">
+          <div className="text-red-500 mb-4">
             You cannot donate to your own campaign.
           </div>
         ) : (
@@ -182,10 +176,15 @@ export default function DonationForm({
         )}
       </div>
 
-      <Modal isOpen={showModal} onClose={() => {}} title={modalTitle}>
+      <Modal
+        isOpen={showModal}
+        onClose={() => {}}
+        title={modalTitle}
+        titleColor="text-black"
+      >
         <div
           className={`text-center ${
-            isSuccess ? "text-green-600" : "text-red-600"
+            isSuccess ? "text-green-500" : "text-red-600"
           }`}
         >
           <p className="mb-4">{modalContent}</p>

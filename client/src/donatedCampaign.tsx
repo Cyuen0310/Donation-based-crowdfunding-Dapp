@@ -1,7 +1,5 @@
-// CampaignL.tsx
 import { useActiveAccount } from "thirdweb/react";
 import { useState, useEffect } from "react";
-import { ethers } from "ethers";
 import { client } from "./client";
 import { defineChain } from "thirdweb/chains";
 import { getContract, readContract } from "thirdweb";
@@ -121,17 +119,9 @@ export default function CampaignL() {
     fetchData();
   }, [account]);
 
-  if (!account) {
-    return (
-      <div className="p-6 max-w-4xl mx-auto text-center">
-        Please connect your wallet
-      </div>
-    );
-  }
-
   if (isLoading) {
     return (
-      <div className="p-6 max-w-4xl mx-auto text-center">
+      <div className="p-6 max-w-4xl mx-auto text-center text-black">
         Loading your donations...
       </div>
     );
@@ -147,7 +137,7 @@ export default function CampaignL() {
 
   if (!userCampaigns || userCampaigns.length === 0) {
     return (
-      <div className="p-6 max-w-4xl mx-auto text-center">
+      <div className="p-6 max-w-4xl mx-auto text-center text-black">
         No donation records found
       </div>
     );
@@ -155,7 +145,7 @@ export default function CampaignL() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8 text-center text-gray-600">
+      <h1 className="text-3xl font-bold mb-8 text-center text-black">
         Your Donation Records
       </h1>
 

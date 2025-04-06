@@ -5,6 +5,7 @@ interface ModalProps {
   onClose: () => void;
   title: string;
   children: React.ReactNode;
+  titleColor?: string;
 }
 
 export default function Modal({
@@ -12,6 +13,7 @@ export default function Modal({
   onClose,
   title,
   children,
+  titleColor = "text-black",
 }: ModalProps) {
   if (!isOpen) return null;
 
@@ -23,7 +25,7 @@ export default function Modal({
       ></div>
       <div className="relative bg-white rounded-lg p-6 max-w-md w-full mx-4 z-10">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-bold">{title}</h3>
+          <h3 className={`text-xl font-bold ${titleColor}`}>{title}</h3>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
