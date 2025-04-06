@@ -61,21 +61,26 @@ export default function CampaignL() {
           return;
         }
 
+        const uniqueCampaignIds = new Set<number>();
         const campaigns: Campaign[] = [];
         const donations: Donation[] = [];
 
         for (const id of backedCampaignIds) {
+          uniqueCampaignIds.add(Number(id));
+        }
+
+        for (const id of uniqueCampaignIds) {
           try {
             const campaignData = await readContract({
               contract,
               method:
                 "function getCampaign(uint256 _id) view returns (address owner, string title, string description, uint256 target, uint256 deadline, uint256 fundedAmount, uint256 numberOfBackers, bool isActive, bool isCollected)",
-              params: [id],
+              params: [BigInt(id)],
             });
 
             if (campaignData) {
               campaigns.push({
-                id: Number(id),
+                id,
                 owner: campaignData[0],
                 title: campaignData[1],
                 description: campaignData[2],
@@ -92,12 +97,12 @@ export default function CampaignL() {
               contract,
               method:
                 "function getContribution(uint256 _id, address _user) view returns (uint256)",
-              params: [id, account.address],
+              params: [BigInt(id), account.address],
             });
 
             if (donationAmount) {
               donations.push({
-                id: Number(id),
+                id,
                 amount: donationAmount,
               });
             }
