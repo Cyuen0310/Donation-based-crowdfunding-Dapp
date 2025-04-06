@@ -99,10 +99,7 @@ const CampaignCard = ({
           {donationAmount !== undefined && (
             <div className="col-span-2">
               <span className="block font-medium">Your Donation</span>
-              <span>
-                {ethers.formatEther(donationAmount)} ETH (
-                {donationAmount.toString()} wei)
-              </span>
+              <span>{ethers.formatEther(donationAmount)} ETH</span>
             </div>
           )}
         </div>
