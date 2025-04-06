@@ -155,7 +155,7 @@ export default function DonationForm({
                 placeholder="0.0"
                 min="0.001"
                 step="0.001"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 text-black"
               />
             </div>
 
