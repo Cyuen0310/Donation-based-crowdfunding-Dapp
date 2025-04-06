@@ -7,19 +7,17 @@ import { client } from "../client";
 
 interface DonationHistoryProps {
   campaignId: number;
+  contract: any;
 }
 
-export function DonationHistory({ campaignId }: DonationHistoryProps) {
-  const contract = getContract({
-    client,
-    chain: defineChain(11155111),
-    address: "0x682103fE1dB26B93d411CED5994d5C759A1F5cdB",
-  });
-
+export function DonationHistory({
+  campaignId,
+  contract,
+}: DonationHistoryProps) {
   const { data, isPending, error } = useReadContract({
     contract,
     method:
-      "function getAllContributions(uint256 _id) view returns (address[], uint256[])",
+      "function getDonations(uint256) view returns (address[] donors, uint256[] amounts)",
     params: [BigInt(campaignId)],
   });
 
