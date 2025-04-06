@@ -115,14 +115,14 @@ export default function DonationForm({
   return (
     <>
       <div className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-xl font-bold mb-4">Support this Campaign</h2>
+        <h2 className="text-xl font-bold mb-4 text-black ">
+          Support this Campaign
+        </h2>
 
         {!isActive ? (
           <div className="text-red-500 mb-4">This campaign has ended.</div>
-        ) : isCollected ? (
-          <div className="text-amber-500 mb-4">Funds have been collected.</div>
         ) : isOwner ? (
-          <div className="text-amber-500 mb-4">
+          <div className="text-red-500 mb-4">
             You cannot donate to your own campaign.
           </div>
         ) : (
@@ -130,7 +130,7 @@ export default function DonationForm({
             <div className="mb-4">
               <label
                 htmlFor="amount"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-black mb-1"
               >
                 Amount (ETH)
               </label>
@@ -142,7 +142,7 @@ export default function DonationForm({
                 placeholder="0.0"
                 min="0.001"
                 step="0.001"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+                className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
               />
             </div>
 

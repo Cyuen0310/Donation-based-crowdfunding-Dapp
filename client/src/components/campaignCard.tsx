@@ -13,7 +13,7 @@ interface CampaignCardProps {
   numberOfBackers: number;
   isActive: boolean;
   isCollected: boolean;
-  donationAmount?: bigint; // Optional
+  donationAmount?: bigint;
 }
 
 const CampaignCard = ({
