@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import { ethers } from "ethers";
 import { useState } from "react";
 import { DonationHistory } from "./components/DonationHistory";
-import { DonateButton } from "./components/DonateButton";
 
 export function CampaignDetails() {
   const { id } = useParams();
@@ -130,15 +129,7 @@ export function CampaignDetails() {
             <DonationHistory contract={contract} campaignId={Number(id)} />*/}
           </div>
 
-
-          <div className="md:col-span-1">
-            <DonateButton
-              contract={contract}
-              campaignId={Number(id)}
-              isActive={isActive}
-              isOwner={account?.address === owner}
-            />
-          </div>
+          <div className="md:col-span-1"></div>
         </div>
       </div>
     </div>
