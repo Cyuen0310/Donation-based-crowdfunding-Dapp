@@ -1,12 +1,13 @@
 import { useActiveAccount, useSendTransaction } from "thirdweb/react";
 import { defineChain, getContract, prepareContractCall } from "thirdweb";
 import { client } from "./client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { parseEther } from "ethers";
 
 export function CreateCampaign() {
   const account = useActiveAccount();
   const { mutate: sendTransaction, isPending } = useSendTransaction();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const contract = getContract({
     client,
@@ -18,6 +19,17 @@ export function CreateCampaign() {
   const [description, setDescription] = useState("");
   const [target, setTarget] = useState("");
   const [duration, setDuration] = useState("");
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (showSuccessModal) {
+      timer = setTimeout(() => {
+        setShowSuccessModal(false);
+        window.location.href = "/dashboard";
+      }, 2000);
+    }
+    return () => clearTimeout(timer);
+  }, [showSuccessModal]);
 
   const handleCreateCampaign = async () => {
     if (!account) {
@@ -36,7 +48,7 @@ export function CreateCampaign() {
       sendTransaction(transaction, {
         onSuccess: (txResult) => {
           console.log("Transaction sent:", txResult);
-          alert("Campaign created successfully!");
+          setShowSuccessModal(true);
           setTitle("");
           setDescription("");
           setTarget("");
@@ -54,6 +66,35 @@ export function CreateCampaign() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
+      {showSuccessModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8 shadow-xl transform transition-all duration-300 scale-100">
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                <svg
+                  className="h-6 w-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Campaign Created Successfully!
+              </h3>
+              <p className="text-sm text-gray-500">
+                Redirecting to dashboard...
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       <h1 className="text-3xl font-bold mb-8 text-center text-gray-600">
         Create New Campaign
       </h1>

@@ -4,10 +4,10 @@ import { client } from "./client";
 import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { CreateCampaign } from "./createCampaign";
-import DonateForm from "./donateForm";
 import Navbar from "./components/navBar";
 import FetchAllCampaign from "./fetchAllCampaign";
 import Dashboard from "./Dashboard";
+import { CampaignDetails } from "./campaignDetails";
 
 export function App() {
   const userwallet = useActiveAccount();
@@ -23,6 +23,7 @@ export function App() {
           <Route path="/" element={<FetchAllCampaign />} />
           <Route path="/createCampaign" element={<CreateCampaign />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/campaign/:id" element={<CampaignDetails />} />
         </Routes>
       </main>
     </Router>

@@ -3,7 +3,7 @@ import React from "react";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { defineChain } from "thirdweb";
 import { client } from "./client";
-import CampaignCard from "./components/campaignCard2";
+import CampaignCard from "./components/campaignCard";
 
 export default function OwnCampaign() {
   const account = useActiveAccount();

@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 import { client } from "./client";
 import { defineChain } from "thirdweb/chains";
 import { getContract, readContract } from "thirdweb";
-import CampaignCard from "./components/campaignCard2";
+import CampaignCard from "./components/campaignCard";
 
 interface Campaign {
   id: number;
