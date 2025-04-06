@@ -103,10 +103,14 @@ export function CampaignDetails() {
                 <div className="grid grid-cols-2 gap-4 text-sm text-black">
                   <div>
                     <span className="block font-medium">Creator</span>
-                    <span className="truncate">{`${owner.slice(
-                      0,
-                      6
-                    )}...${owner.slice(-4)}`}</span>
+                    <a
+                      href={`https://sepolia.etherscan.io/address/${owner}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-violet-600 hover:text-violet-800 hover:underline truncate block"
+                    >
+                      {`${owner.slice(0, 6)}...${owner.slice(-4)}`}
+                    </a>
                   </div>
                   <div>
                     <span className="block font-medium">Backers</span>

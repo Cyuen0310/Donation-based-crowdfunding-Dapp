@@ -3,6 +3,7 @@ pragma solidity ^0.8.9;
 
 import {AutomationCompatibleInterface} from "@chainlink/contracts/src/v0.8/automation/AutomationCompatible.sol";
 
+// chainlink automation compatible interface
 contract CrowdFunding is AutomationCompatibleInterface {
     struct Campaign {
         address payable owner;
@@ -15,19 +16,20 @@ contract CrowdFunding is AutomationCompatibleInterface {
         uint256 numberOfBackers;
         bool isActive;
         bool isCollected;
-        mapping(address => uint256) backers;
-        address[] backerList; 
+        mapping(address => uint256) backers; // campaign[id].backers[address] = amount
+        address[] backerList;  
     }
 
     uint256 public TotalCampaigns = 0;
-    mapping(uint256 => Campaign) private campaigns;
-    mapping(address => uint256[]) public backedCampaigns;
-    mapping(address => uint256[]) public createdCampaigns;
+    mapping(uint256 => Campaign) private campaigns; 
+    mapping(address => uint256[]) public backedCampaigns; // backedCampaigns[address] = [id, id] # array of  users backed campaigns
+    mapping(address => uint256[]) public createdCampaigns; // createdCampaigns[address] = [id, id] # array of  users created campaigns
 
     event backedcampaign(uint256 indexed id, address indexed backer, uint256 amount);
     event createdcampaign(uint256 indexed id, address indexed owner, string title, string description, uint256 target, uint256 duration);
     event withdrawfund(uint256 indexed id, address indexed owner, uint256 amount);
 
+    // create a campaign
     function createCampaign(
         string memory _title,
         string memory _description,
@@ -56,6 +58,7 @@ contract CrowdFunding is AutomationCompatibleInterface {
         return campaignId;
     }
 
+    // back/donate to a campaign
     function backCampaign(uint256 _id) public payable {
         uint256 fundingValue = msg.value;
         require(fundingValue > 0, "Funding value must be larger than 0");
@@ -75,6 +78,7 @@ contract CrowdFunding is AutomationCompatibleInterface {
         emit backedcampaign(_id, msg.sender, fundingValue);
     }
 
+    // Chainlink Automation: constantly checking if the campaign is able to be collected (still Active, not Collected, and either meet the target or the deadline has passed)
     function checkUpkeep(bytes calldata) external view override returns (bool upkeepNeeded, bytes memory performData) {
         for (uint256 i = 0; i < TotalCampaigns; i++) {
             Campaign storage campaign = campaigns[i];
@@ -89,6 +93,7 @@ contract CrowdFunding is AutomationCompatibleInterface {
         return (false, "");
     }
 
+    // Chainlink Automation: if checkUpkeep returns true, automatically transfer the funded amount to the campaign owner
     function performUpkeep(bytes calldata performData) external override {
         uint256 campaignId = abi.decode(performData, (uint256));
         Campaign storage campaign = campaigns[campaignId];
@@ -105,19 +110,22 @@ contract CrowdFunding is AutomationCompatibleInterface {
         emit withdrawfund(campaignId, campaign.owner, amount);
     }
 
+    // get all campaigns that a user has contributed 
     function getBackedCampaigns(address _backer) public view returns (uint256[] memory) {
         return backedCampaigns[_backer];
     }
 
+    // get all campaigns that a user has created
     function getCreatedCampaigns(address _owner) public view returns (uint256[] memory) {
         return createdCampaigns[_owner];
     }
 
+    // get the amount a user has contributed to a campaign
     function getContribution(uint256 _id, address _user) public view returns (uint256) {
         return campaigns[_id].backers[_user];
     }
 
-
+    // get all users who have donated to that campaign
     function getAllContributions(uint256 _id) public view returns (address[] memory, uint256[] memory) {
         Campaign storage campaign = campaigns[_id];
         uint256 backerCount = campaign.backerList.length;
