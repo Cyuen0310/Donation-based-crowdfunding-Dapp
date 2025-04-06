@@ -17,7 +17,7 @@ export function DonationHistory({
   const { data, isPending, error } = useReadContract({
     contract,
     method:
-      "function getDonations(uint256) view returns (address[] donors, uint256[] amounts)",
+      "function getAllContributions(uint256 _id) view returns (address[], uint256[])",
     params: [BigInt(campaignId)],
   });
 

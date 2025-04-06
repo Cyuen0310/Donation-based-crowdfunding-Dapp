@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { prepareContractCall } from "thirdweb";
-import { useSendTransaction } from "thirdweb/react";
+import {
+  useSendTransaction,
+  useActiveAccount,
+  useReadContract,
+} from "thirdweb/react";
 import { ethers } from "ethers";
 import { useNavigate } from "react-router-dom";
 import Modal from "./Modal";
@@ -25,11 +29,28 @@ export default function DonationForm({
   const [modalTitle, setModalTitle] = useState("");
   const [modalContent, setModalContent] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
   const navigate = useNavigate();
+  const account = useActiveAccount();
 
   const { mutate: sendTransaction } = useSendTransaction();
 
-  // Auto-close modal after 2 seconds
+  // Get campaign details to check owner
+  const { data: campaign } = useReadContract({
+    contract,
+    method:
+      "function getCampaign(uint256 _id) view returns (address owner, string title, string description, uint256 target, uint256 deadline, uint256 fundedAmount, uint256 numberOfBackers, bool isActive, bool isCollected)",
+    params: [BigInt(campaignId)],
+  });
+
+  // Check if current wallet is the owner
+  useEffect(() => {
+    if (account?.address && campaign) {
+      const owner = campaign[0];
+      setIsOwner(owner.toLowerCase() === account.address.toLowerCase());
+    }
+  }, [account?.address, campaign]);
+
   useEffect(() => {
     if (showModal) {
       const timer = setTimeout(() => {
@@ -98,6 +119,12 @@ export default function DonationForm({
 
         {!isActive ? (
           <div className="text-red-500 mb-4">This campaign has ended.</div>
+        ) : isCollected ? (
+          <div className="text-amber-500 mb-4">Funds have been collected.</div>
+        ) : isOwner ? (
+          <div className="text-amber-500 mb-4">
+            You cannot donate to your own campaign.
+          </div>
         ) : (
           <>
             <div className="mb-4">
@@ -115,7 +142,7 @@ export default function DonationForm({
                 placeholder="0.0"
                 min="0.001"
                 step="0.001"
-                className="text-black w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
               />
             </div>
 
@@ -123,9 +150,9 @@ export default function DonationForm({
 
             <button
               onClick={handleDonate}
-              disabled={isLoading || !isActive || isCollected}
+              disabled={isLoading || !isActive || isCollected || isOwner}
               className={`w-full py-2 px-4 rounded-md text-white font-medium ${
-                isLoading || !isActive || isCollected
+                isLoading || !isActive || isCollected || isOwner
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-violet-600 hover:bg-violet-700"
               }`}

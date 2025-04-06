@@ -124,9 +124,6 @@ export function CampaignDetails() {
                 </div>
               </div>
             </div>
-
-            {/* Donation History */}
-            <DonationHistory contract={contract} campaignId={Number(id)} />
           </div>
 
           {/* Right Column - Donation Form */}
@@ -138,6 +135,11 @@ export function CampaignDetails() {
               isCollected={isCollected}
             />
           </div>
+        </div>
+
+        {/* Donation History - Below both columns */}
+        <div className="mt-8">
+          <DonationHistory contract={contract} campaignId={Number(id)} />
         </div>
       </div>
     </div>

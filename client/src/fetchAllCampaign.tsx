@@ -23,7 +23,7 @@ function FetchAllCampaign() {
     const { data, isPending, error } = useReadContract({
       contract,
       method:
-        "function campaigns(uint256) view returns (address owner, string title, string description, uint256 target, uint256 duration, uint256 deadline, uint256 fundedAmount, uint256 numberOfBackers, bool isActive, bool isCollected)",
+        "function getCampaign(uint256 _id) view returns (address owner, string title, string description, uint256 target, uint256 deadline, uint256 fundedAmount, uint256 numberOfBackers, bool isActive, bool isCollected)",
       params: [BigInt(campaignId)],
     });
 
@@ -38,7 +38,6 @@ function FetchAllCampaign() {
       title,
       description,
       target,
-      duration,
       deadline,
       fundedAmount,
       numberOfBackers,
