@@ -21,16 +21,6 @@ export default function Dashboard() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-black">Dashboard</h1>
-        <button
-          onClick={() => (window.location.href = "/createCampaign")}
-          className="px-6 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-all duration-300 hover:scale-105 hover:shadow-lg"
-        >
-          Create Campaign
-        </button>
-      </div>
-
-      <div className="mb-6">
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-8">
             <button
@@ -55,6 +45,12 @@ export default function Dashboard() {
             </button>
           </nav>
         </div>
+        <button
+          onClick={() => (window.location.href = "/createCampaign")}
+          className="px-6 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-all duration-300 hover:scale-105 hover:shadow-lg"
+        >
+          Create Campaign
+        </button>
       </div>
 
       <div className="mt-6">
