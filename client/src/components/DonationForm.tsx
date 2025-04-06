@@ -4,10 +4,12 @@ import {
   useSendTransaction,
   useActiveAccount,
   useReadContract,
+  ConnectButton,
 } from "thirdweb/react";
 import { ethers } from "ethers";
 import { useNavigate } from "react-router-dom";
 import Modal from "./Modal";
+import { client } from "../client";
 
 interface DonationFormProps {
   contract: any;
@@ -30,6 +32,7 @@ export default function DonationForm({
   const [modalContent, setModalContent] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
+  const [showConnectModal, setShowConnectModal] = useState(false);
   const navigate = useNavigate();
   const account = useActiveAccount();
 
@@ -51,6 +54,17 @@ export default function DonationForm({
     }
   }, [account?.address, campaign]);
 
+  // Auto-close connect modal after wallet connection
+  useEffect(() => {
+    if (account?.address && showConnectModal) {
+      const timer = setTimeout(() => {
+        setShowConnectModal(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [account?.address, showConnectModal]);
+
+  // Auto-close modal after 2 seconds
   useEffect(() => {
     if (showModal) {
       const timer = setTimeout(() => {
@@ -64,6 +78,11 @@ export default function DonationForm({
   }, [showModal, isSuccess, navigate]);
 
   const handleDonate = () => {
+    if (!account) {
+      setShowConnectModal(true);
+      return;
+    }
+
     if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
       setError("Please enter a valid amount");
       return;
@@ -81,6 +100,7 @@ export default function DonationForm({
         value: ethers.parseEther(amount),
       });
 
+      // Send the transaction
       sendTransaction(transaction as any, {
         onSuccess: () => {
           setIsSuccess(true);
@@ -114,14 +134,14 @@ export default function DonationForm({
   return (
     <>
       <div className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-xl font-bold mb-4 text-black ">
-          Support this Campaign
-        </h2>
+        <h2 className="text-xl font-bold mb-4">Support this Campaign</h2>
 
         {!isActive ? (
           <div className="text-red-500 mb-4">This campaign has ended.</div>
+        ) : isCollected ? (
+          <div className="text-amber-500 mb-4">Funds have been collected.</div>
         ) : isOwner ? (
-          <div className="text-red-500 mb-4">
+          <div className="text-amber-500 mb-4">
             You cannot donate to your own campaign.
           </div>
         ) : (
@@ -129,7 +149,7 @@ export default function DonationForm({
             <div className="mb-4">
               <label
                 htmlFor="amount"
-                className="block text-sm font-medium text-black mb-1"
+                className="block text-sm font-medium text-gray-700 mb-1"
               >
                 Amount (ETH)
               </label>
@@ -141,7 +161,7 @@ export default function DonationForm({
                 placeholder="0.0"
                 min="0.001"
                 step="0.001"
-                className="w-full px-3 py-2 border border-gray-300 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500"
               />
             </div>
 
@@ -171,6 +191,31 @@ export default function DonationForm({
           <p className="mb-4">{modalContent}</p>
         </div>
       </Modal>
+
+      {showConnectModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-xl shadow-2xl max-w-md w-full mx-4">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                Connect Your Wallet
+              </h3>
+            </div>
+
+            <div className="flex justify-center mb-6">
+              <ConnectButton client={client} theme="light" />
+            </div>
+
+            <div className="border-t border-gray-200 pt-4 flex justify-center">
+              <button
+                onClick={() => setShowConnectModal(false)}
+                className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
