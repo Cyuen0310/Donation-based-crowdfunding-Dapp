@@ -7,34 +7,25 @@ export default function Navbar() {
   const userwallet = useActiveAccount();
 
   return (
-    <nav className="bg-white text-black px-6 py-4 ">
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Link to="/" className="text-xl font-bold text-green-600">
+    <nav className="bg-white text-black px-6 py-4 w-full border-b border-gray-200">
+      <div className="w-full flex justify-between items-center">
+        <Link to="/" className="text-3xl font-bold text-green-600">
           Daonation
         </Link>
 
         <div className="space-x-6 hidden md:flex">
-          <Link to="/" className="hover:text-violet-400 transition">
+          <Link
+            to="/"
+            className="hover:text-green-800 transition text-lg font-bold"
+          >
             Home
           </Link>
 
           {userwallet && (
             <>
               <Link
-                to="/createCampaign"
-                className="hover:text-violet-400 transition"
-              >
-                Create
-              </Link>
-              <Link
-                to="/campaignList"
-                className="hover:text-violet-400 transition"
-              >
-                Campaigns
-              </Link>
-              <Link
                 to="/dashboard"
-                className="hover:text-violet-400 transition"
+                className="hover:text-green-800 transition text-lg font-bold"
               >
                 Dashboard
               </Link>

@@ -20,7 +20,9 @@ function FetchAllCampaign() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8 text-center">All Campaigns</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center text-black">
+        All Campaigns
+      </h1>
 
       {isPending ? (
         <p className="text-center">Loading campaigns...</p>
@@ -34,5 +36,4 @@ function FetchAllCampaign() {
     </div>
   );
 }
-
 export default FetchAllCampaign;
