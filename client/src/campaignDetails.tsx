@@ -14,14 +14,14 @@ export function CampaignDetails() {
 
   const contract = getContract({
     client,
-    chain: defineChain(11155111), // Sepolia
-    address: "0x966c2a1d4664Bc1060544Fa369b2f4C1d9526D8d",
+    chain: defineChain(11155111),
+    address: "0x682103fE1dB26B93d411CED5994d5C759A1F5cdB",
   });
 
   const { data: campaign, isPending } = useReadContract({
     contract,
     method:
-      "function campaigns(uint256) view returns (address owner, string title, string description, uint256 target, uint256 duration, uint256 deadline, uint256 fundedAmount, uint256 numberOfBackers, bool isActive, bool isCollected)",
+      "function getCampaign(uint256 _id) view returns (address owner, string title, string description, uint256 target, uint256 deadline, uint256 fundedAmount, uint256 numberOfBackers, bool isActive, bool isCollected)",
     params: [BigInt(id || "0")],
   });
 
@@ -46,7 +46,6 @@ export function CampaignDetails() {
     title,
     description,
     target,
-    duration,
     deadline,
     fundedAmount,
     numberOfBackers,

@@ -11,8 +11,8 @@ export function CreateCampaign() {
 
   const contract = getContract({
     client,
-    chain: defineChain(11155111), // Sepolia
-    address: "0x966c2a1d4664Bc1060544Fa369b2f4C1d9526D8d",
+    chain: defineChain(11155111),
+    address: "0x682103fE1dB26B93d411CED5994d5C759A1F5cdB",
   });
 
   const [title, setTitle] = useState("");

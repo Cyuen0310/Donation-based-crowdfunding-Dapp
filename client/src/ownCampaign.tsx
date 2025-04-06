@@ -1,25 +1,25 @@
 // OwnCampaign.tsx
 import React from "react";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
-import { defineChain } from "thirdweb";
+import { defineChain, getContract } from "thirdweb";
 import { client } from "./client";
 import CampaignCard from "./components/campaignCard";
 
 export default function OwnCampaign() {
   const account = useActiveAccount();
 
-  const contractConfig = {
-    client: client,
-    chain: defineChain(11155111), // Sepolia
-    address: "0x966c2a1d4664Bc1060544Fa369b2f4C1d9526D8d" as `0x${string}`,
-  };
+  const contract = getContract({
+    client,
+    chain: defineChain(11155111),
+    address: "0x682103fE1dB26B93d411CED5994d5C759A1F5cdB",
+  });
 
   const {
     data: campaignIds,
     isLoading: isLoadingIds,
     error: errorIds,
   } = useReadContract({
-    contract: contractConfig,
+    contract: contract,
     method:
       "function getCreatedCampaigns(address _owner) view returns (uint256[])",
     params: [account?.address || ""],
@@ -27,7 +27,7 @@ export default function OwnCampaign() {
 
   const CampaignDetails = ({ campaignId }: { campaignId: bigint }) => {
     const { data, isLoading, error } = useReadContract({
-      contract: contractConfig,
+      contract: contract,
       method:
         "function getCampaign(uint256 _id) view returns (address owner, string title, string description, uint256 target, uint256 deadline, uint256 fundedAmount, uint256 numberOfBackers, bool isActive, bool isCollected)",
       params: [campaignId],
