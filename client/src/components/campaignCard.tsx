@@ -1,13 +1,13 @@
 // CampaignCard.tsx
-import React, { useState } from 'react';
-import { formatEther, parseEther } from 'ethers';
-import { useReadContract, useSendTransaction } from 'thirdweb/react';
+import React, { useState } from "react";
+import { formatEther, parseEther } from "ethers";
+import { useReadContract, useSendTransaction } from "thirdweb/react";
 import { prepareContractCall } from "thirdweb";
 import { ContractInterface } from "ethers"; // Import ContractInterface
 
 interface CampaignCardProps {
   id: number;
-  contract: any; // Keep as 'any' for now, since we're avoiding the ABI
+  contract: any;
 }
 
 const CampaignCard: React.FC<CampaignCardProps> = ({ id, contract }) => {
@@ -18,8 +18,12 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ id, contract }) => {
     params: [BigInt(id)],
   });
 
-  const [donationAmount, setDonationAmount] = useState('');
-  const { mutate: sendTransaction, status: donationStatus, error: transactionError } = useSendTransaction();
+  const [donationAmount, setDonationAmount] = useState("");
+  const {
+    mutate: sendTransaction,
+    status: donationStatus,
+    error: transactionError,
+  } = useSendTransaction();
 
   if (isLoading) {
     return <p>Loading campaign details...</p>;
@@ -34,56 +38,62 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ id, contract }) => {
   }
 
   if (!data) {
-    return null; // Or display a message if no data is found
+    return null;
   }
 
-  const [owner, title, description, target, deadline, fundedAmount, numberOfBackers, isActive, isCollected] = data;
+  const [
+    owner,
+    title,
+    description,
+    target,
+    deadline,
+    fundedAmount,
+    numberOfBackers,
+    isActive,
+    isCollected,
+  ] = data;
 
-  // Convert BigInt values to numbers for progress calculation
   const targetEther = target ? Number(formatEther(target.toString())) : 0;
-  const fundedAmountEther = fundedAmount ? Number(formatEther(fundedAmount.toString())) : 0;
+  const fundedAmountEther = fundedAmount
+    ? Number(formatEther(fundedAmount.toString()))
+    : 0;
 
-  // Calculate percentage, handling cases where target is zero
   let progress: number;
   if (targetEther > 0) {
-    progress = (fundedAmountEther / targetEther) * 100; // Remove Math.min(100, ...)
+    progress = (fundedAmountEther / targetEther) * 100;
   } else if (fundedAmountEther > 0) {
-    // If target is zero but fund is raised, consider it infinite percent
     progress = Infinity;
   } else {
-    progress = 0; // If both are zero
+    progress = 0;
   }
 
   let displayProgress = isFinite(progress) ? progress.toFixed(2) : "∞";
 
   const handleDonate = async () => {
     try {
-      // Validate donationAmount is not empty and is a valid number
       if (!donationAmount) {
         alert("Please enter a donation amount.");
         return;
       }
 
-      // Convert donationAmount to Wei (bigint)
       const donationValue = parseEther(donationAmount);
 
-      // **Explicitly Define Transaction Type**
-      const transaction: any = await prepareContractCall({ // Changed type here
+      const transaction: any = await prepareContractCall({
         contract: contract,
         method: "function backCampaign(uint256 _id) payable",
-        params: [BigInt(id)], // Use BigInt here too
-        value: donationValue, // Send the donation amount in Wei
+        params: [BigInt(id)],
+        value: donationValue,
       });
 
-      sendTransaction(transaction, { // Add error handling to sendTransaction
-          onSuccess: (tx) => {
-              alert("Donation successful!");
-              console.log("Transaction:", tx);
-          },
-          onError: (err: any) => {
-              alert(`Donation failed: ${err.message}`);
-              console.error("Transaction error:", err);
-          },
+      sendTransaction(transaction, {
+        onSuccess: (tx) => {
+          alert("Donation successful!");
+          console.log("Transaction:", tx);
+        },
+        onError: (err: any) => {
+          alert(`Donation failed: ${err.message}`);
+          console.error("Transaction error:", err);
+        },
       });
     } catch (err: any) {
       console.error("Failed to prepare transaction", err);
@@ -91,10 +101,11 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ id, contract }) => {
     }
   };
 
-  // Hardcoded Donate Form
   const DonateForm = () => (
     <div className="bg-gray-50 rounded-xl p-4 mt-4">
-      <h3 className="text-lg font-semibold text-gray-700 mb-2">Support this Project</h3>
+      <h3 className="text-lg font-semibold text-gray-700 mb-2">
+        Support this Project
+      </h3>
       <div className="flex items-center border rounded-md overflow-hidden mb-3">
         <input
           type="number"
@@ -127,7 +138,9 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ id, contract }) => {
           <h2 className="text-xl font-bold text-gray-900">{title}</h2>
           <span
             className={`px-3 py-1 text-xs rounded-full ${
-              isActive ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"
+              isActive
+                ? "bg-green-100 text-green-800"
+                : "bg-gray-100 text-gray-800"
             }`}
           >
             {isActive ? "Ongoing" : "Ended"}
@@ -138,11 +151,19 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ id, contract }) => {
 
         <div className="mb-4">
           <div className="flex justify-between text-sm mb-2">
-            <span>Raised: {fundedAmount ? formatEther(fundedAmount.toString()) : "0"} ETH</span>
-            <span>Target: {target ? formatEther(target.toString()) : "0"} ETH</span>
+            <span>
+              Raised:{" "}
+              {fundedAmount ? formatEther(fundedAmount.toString()) : "0"} ETH
+            </span>
+            <span>
+              Target: {target ? formatEther(target.toString()) : "0"} ETH
+            </span>
           </div>
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${Math.min(progress, 100)}%` }} />
+            <div
+              className="bg-blue-600 h-2 rounded-full"
+              style={{ width: `${Math.min(progress, 100)}%` }}
+            />
           </div>
           <div className="text-sm mt-1 text-gray-500">
             {displayProgress}% Funded
@@ -152,7 +173,9 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ id, contract }) => {
         <div className="grid grid-cols-2 gap-4 text-sm text-gray-500 mb-4">
           <div>
             <span className="block font-medium">Creator</span>
-            <span className="truncate">{`${owner.slice(0, 6)}...${owner.slice(-4)}`}</span>
+            <span className="truncate">{`${owner.slice(0, 6)}...${owner.slice(
+              -4
+            )}`}</span>
           </div>
           <div>
             <span className="block font-medium">Backers</span>
@@ -164,10 +187,10 @@ const CampaignCard: React.FC<CampaignCardProps> = ({ id, contract }) => {
           </div>
           <div className="col-span-2">
             <span className="block font-medium">Your Donation</span>
-            <span>0 ETH</span> {/*  Placeholder */}
+            <span>0 ETH</span>
           </div>
         </div>
-        {/* Donate Form */}
+
         <DonateForm />
       </div>
     </div>

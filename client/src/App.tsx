@@ -2,13 +2,14 @@ import { ConnectButton, useActiveAccount } from "thirdweb/react";
 import thirdwebIcon from "./thirdweb.svg";
 import { client } from "./client";
 import { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { CreateCampaign } from "./createCampaign";
 import CampaignList from "./campaignList";
 import DonateForm from "./donateForm";
 import OwnCampaignList from "./ownCampaign";
 import Navbar from "./components/navBar";
 import FetchAllCampaign from "./fetchAllCampaign";
+
 export function App() {
   const userwallet = useActiveAccount();
   useEffect(() => {
@@ -17,59 +18,13 @@ export function App() {
 
   return (
     <Router>
-      <main className=" p-4 pb-10 min-h-[100vh] container max-w-screen-xl mx-auto bg-white">
+      <main className="p-4 pb-10 min-h-[100vh] container max-w-screen-xl mx-auto bg-white">
         <Navbar />
-        <FetchAllCampaign />
-
         <Routes>
-          <Route
-            path="/"
-            element={
-              <div className="flex items-center justify-center min-h-[80vh]">
-                <div className="py-20 text-center">
-                  {userwallet ? (
-                    <div className="flex justify-center space-x-4">
-                      <Link
-                        to="/createCampaign"
-                        className="text-blue-500 hover:text-blue-600"
-                      >
-                        Create Campaign
-                      </Link>
-                      <Link
-                        to="/donateCampaign"
-                        className="text-blue-500 hover:text-blue-600"
-                      >
-                        Donate to Campaign
-                      </Link>
-                      <Link
-                        to="/campaignList"
-                        className="text-blue-500 hover:text-blue-600"
-                      >
-                        Campaign List
-                      </Link>
-                      <Link
-                        to="/ownCampaign"
-                        className="text-blue-500 hover:text-blue-600"
-                      >
-                        Own Campaign List
-                      </Link>
-                    </div>
-                  ) : (
-                    <>
-                      <Header />
-                      <h2 className="text-xl text-zinc-400">
-                        Please connect your wallet to continue.
-                      </h2>
-                    </>
-                  )}
-                </div>
-              </div>
-            }
-          />
+          <Route path="/" element={<FetchAllCampaign />} />
           <Route path="/createCampaign" element={<CreateCampaign />} />
-          <Route path="/donateCampaign" element={<DonateForm />} />
           <Route path="/campaignList" element={<CampaignList />} />
-          <Route path="/ownCampaign" element={<OwnCampaignList />} />
+          <Route path="/dashboard" element={<OwnCampaignList />} />
         </Routes>
       </main>
     </Router>
