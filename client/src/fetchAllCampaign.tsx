@@ -11,14 +11,16 @@ function FetchAllCampaign() {
     address: "0x682103fE1dB26B93d411CED5994d5C759A1F5cdB",
   });
 
-  const { data: totalCampaigns, isPending: isLoadingTotal } = useReadContract({
+  // fetch the total number of campaigns
+  const { data, isPending } = useReadContract({
     contract,
     method: "function TotalCampaigns() view returns (uint256)",
     params: [],
   });
 
-  const total = Number(totalCampaigns || 0);
+  const total = Number(data || 0);
 
+  // fetch campaign details by its id
   const CampaignDetails = ({ campaignId }: { campaignId: number }) => {
     const { data, isPending, error } = useReadContract({
       contract,
@@ -67,7 +69,7 @@ function FetchAllCampaign() {
         All Campaigns
       </h1>
 
-      {isLoadingTotal ? (
+      {isPending ? (
         <div className="space-y-6">
           {[1, 2, 3].map((i) => (
             <div

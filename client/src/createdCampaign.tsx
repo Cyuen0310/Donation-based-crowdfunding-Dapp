@@ -1,4 +1,3 @@
-import React from "react";
 import { useActiveAccount, useReadContract } from "thirdweb/react";
 import { defineChain, getContract } from "thirdweb";
 import { client } from "./client";
@@ -14,9 +13,9 @@ export default function OwnCampaign() {
   });
 
   const {
-    data: campaignIds,
-    isLoading: isLoadingIds,
-    error: errorIds,
+    data: campaigns,
+    isLoading: isLoading,
+    error: error,
   } = useReadContract({
     contract: contract,
     method:
@@ -76,17 +75,17 @@ export default function OwnCampaign() {
       </h1>
       {account ? (
         <div>
-          {isLoadingIds ? (
+          {isLoading ? (
             <p className="text-center text-black text-lg">
               Loading campaign IDs...
             </p>
-          ) : errorIds ? (
+          ) : error ? (
             <p className="text-center text-red-500">
-              Error fetching campaign IDs: {errorIds.message}
+              Error fetching campaign IDs: {error.message}
             </p>
-          ) : campaignIds && campaignIds.length > 0 ? (
+          ) : campaigns && campaigns.length > 0 ? (
             <div>
-              {campaignIds.map((campaignId: any) => {
+              {campaigns.map((campaignId: any) => {
                 const campaignIdBigInt = BigInt(campaignId);
                 return (
                   <CampaignDetails
@@ -97,7 +96,7 @@ export default function OwnCampaign() {
               })}
             </div>
           ) : (
-            <p className="text-center">No campaigns created yet.</p>
+            <p className="text-center text-black">No campaigns created yet.</p>
           )}
         </div>
       ) : (

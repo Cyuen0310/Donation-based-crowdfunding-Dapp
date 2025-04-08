@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { prepareContractCall } from "thirdweb";
 import {
   useSendTransaction,
@@ -18,6 +18,7 @@ interface DonationFormProps {
   isCollected: boolean;
 }
 
+// donate button component
 export default function DonationForm({
   contract,
   campaignId,

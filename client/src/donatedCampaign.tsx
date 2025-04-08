@@ -23,6 +23,7 @@ interface Donation {
   amount: bigint;
 }
 
+// fetch the donated campaigns of the user
 export default function CampaignL() {
   const account = useActiveAccount();
   const [userCampaigns, setUserCampaigns] = useState<Campaign[]>([]);

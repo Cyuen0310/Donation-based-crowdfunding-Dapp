@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useActiveAccount } from "thirdweb/react";
 import DonatedCampaign from "./donatedCampaign";
 import CreatedCampaign from "./createdCampaign";
@@ -10,7 +10,9 @@ export default function Dashboard() {
   if (!userwallet) {
     return (
       <div className="text-center py-10">
-        <h2 className="text-2xl font-bold mb-4">Please connect your wallet</h2>
+        <h2 className="text-2xl font-bold mb-4 text-black">
+          Please connect your wallet
+        </h2>
         <p className="text-gray-600">
           You need to connect your wallet to view your dashboard.
         </p>

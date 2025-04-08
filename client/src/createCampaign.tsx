@@ -37,7 +37,7 @@ export function CreateCampaign() {
       return;
     }
 
-    try {
+    try {  
       const transaction = prepareContractCall({
         contract,
         method:

@@ -11,6 +11,8 @@ export function DonationHistory({
   campaignId,
   contract,
 }: DonationHistoryProps) {
+
+  // fetch all donations history of the campaign
   const { data, isPending, error } = useReadContract({
     contract,
     method:

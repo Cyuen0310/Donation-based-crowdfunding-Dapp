@@ -39,3 +39,4 @@ coverage.json
 
 # Gas reports
 gas-report.txt 
+package-lock.json

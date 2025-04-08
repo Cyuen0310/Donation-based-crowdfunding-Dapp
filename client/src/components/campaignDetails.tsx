@@ -1,11 +1,10 @@
-import { useReadContract, useActiveAccount } from "thirdweb/react";
+import { useReadContract } from "thirdweb/react";
 import { defineChain, getContract } from "thirdweb";
-import { client } from "./client";
+import { client } from "../client";
 import { useParams } from "react-router-dom";
 import { ethers } from "ethers";
-import { useState } from "react";
-import { DonationHistory } from "./components/DonationHistory";
-import DonationForm from "./components/DonationForm";
+import { DonationHistory } from "./DonationHistory";
+import DonationForm from "./DonationForm";
 
 export function CampaignDetails() {
   const { id } = useParams();
@@ -16,6 +15,7 @@ export function CampaignDetails() {
     address: "0x682103fE1dB26B93d411CED5994d5C759A1F5cdB",
   });
 
+  // fetch the campaign details by its id
   const { data: campaign, isPending } = useReadContract({
     contract,
     method:
@@ -39,6 +39,7 @@ export function CampaignDetails() {
     );
   }
 
+  // destructure the campaign details
   const [
     owner,
     title,
@@ -109,7 +110,7 @@ export function CampaignDetails() {
                       rel="noopener noreferrer"
                       className="text-violet-600 hover:text-violet-800 hover:underline truncate block"
                     >
-                      {`${owner.slice(0, 6)}...${owner.slice(-4)}`}
+                      {owner}
                     </a>
                   </div>
                   <div>
@@ -137,6 +138,7 @@ export function CampaignDetails() {
           </div>
         </div>
 
+        {/* shows donation history of the campaign */}
         <div className="mt-8">
           <DonationHistory contract={contract} campaignId={Number(id)} />
         </div>
