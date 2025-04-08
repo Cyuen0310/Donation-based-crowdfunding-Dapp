@@ -78,7 +78,7 @@ contract CrowdFunding is AutomationCompatibleInterface {
         emit backedcampaign(_id, msg.sender, fundingValue);
     }
 
-    // Chainlink Automation: constantly checking if the campaign is able to be collected (still Active, not Collected, and either meet the target or the deadline has passed)
+    // Chainlink Automation: off-chain node constantly checking if the campaign is able to be collected (still Active, not Collected, and either meet the target or the deadline has passed)
     function checkUpkeep(bytes calldata) external view override returns (bool upkeepNeeded, bytes memory performData) {
         for (uint256 i = 0; i < TotalCampaigns; i++) {
             Campaign storage campaign = campaigns[i];

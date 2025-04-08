@@ -32,12 +32,7 @@ export default function OwnCampaign() {
     });
 
     if (isLoading) return <p>Loading campaign details...</p>;
-    if (error)
-      return (
-        <p className="text-red-500">
-          Error fetching campaign details: {error.message}
-        </p>
-      );
+    if (error) return <p className="text-red-500">Error: {error.message}</p>;
     if (!data) return null;
 
     const [
@@ -77,12 +72,10 @@ export default function OwnCampaign() {
         <div>
           {isLoading ? (
             <p className="text-center text-black text-lg">
-              Loading campaign IDs...
+              Loading campaigns ...
             </p>
           ) : error ? (
-            <p className="text-center text-red-500">
-              Error fetching campaign IDs: {error.message}
-            </p>
+            <p className="text-center text-red-500">Error: {error.message}</p>
           ) : campaigns && campaigns.length > 0 ? (
             <div>
               {campaigns.map((campaignId: any) => {

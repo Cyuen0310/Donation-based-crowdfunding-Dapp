@@ -37,7 +37,8 @@ export function CreateCampaign() {
       return;
     }
 
-    try {  
+    // create a new campaign
+    try {
       const transaction = prepareContractCall({
         contract,
         method:
@@ -60,7 +61,7 @@ export function CreateCampaign() {
         },
       });
     } catch (error) {
-      console.error("Error preparing transaction:", error);
+      console.error("Error:", error);
     }
   };
 

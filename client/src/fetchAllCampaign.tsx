@@ -1,4 +1,3 @@
-import React from "react";
 import { useReadContract } from "thirdweb/react";
 import { getContract, defineChain } from "thirdweb";
 import { client } from "./client";
